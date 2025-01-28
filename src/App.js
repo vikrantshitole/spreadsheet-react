@@ -1,13 +1,8 @@
-import logo from './logo.svg';
-import './App.css';
-import Spreadsheet from './Components/SpreadSheet';
-
-function App() {
-  return (
-    <div className="App">
-      <Spreadsheet />
-    </div>
-  );
-}
-
-export default App;
+import React from 'react'
+import Table from './Components/Table/Table'
+const App = () => (
+  <div style={{ width: 'max-content' }}>
+    <Table x={10} y={10} />
+  </div>
+)
+export default App
