@@ -5,14 +5,15 @@ import { Parser as FormulaParser } from 'hot-formula-parser';
 const Table = (props) => {
   const [data, setData] = useState({});
   const parser = new FormulaParser();
-
+    const [numOfRows, setNumOfRows] = useState(props.y)
+    const [numOfColumns, setNumOfColumns] = useState(props.x)
   useEffect(() => {
     // Hook into the parser's callCellValue event
     parser.on('callCellValue', (cellCoord, done) => {
       const x = cellCoord.column.index + 1;
       const y = cellCoord.row.index + 1;
 
-      if (x > props.x || y > props.y) {
+      if (x > numOfColumns || y > numOfRows) {
         throw parser.Error(parser.ERROR_NOT_AVAILABLE);
       }
 
@@ -64,7 +65,7 @@ const Table = (props) => {
       parser.off('callCellValue');
       parser.off('callRangeValue');
     };
-  }, [data, parser, props.x, props.y]);
+  }, [data, parser, numOfColumns, numOfRows]);
 
   const handleChangedCell = ({ x, y }, value) => {
     setData((prevData) => {
@@ -93,7 +94,7 @@ const Table = (props) => {
   };
 
   const rows = [];
-  for (let y = 0; y < props.y + 1; y += 1) {
+  for (let y = 0; y < numOfRows + 1; y += 1) {
     const rowData = data[y] || {};
     rows.push(
       <Row
@@ -101,13 +102,29 @@ const Table = (props) => {
         executeFormula={executeFormula}
         key={y}
         y={y}
-        x={props.x + 1}
+        x={numOfColumns + 1}
         rowData={rowData}
       />
     );
   }
 
-  return <div>{rows}</div>;
+  const addRow = () =>{
+    setNumOfRows((prevState)=>prevState+1)
+  }
+
+  const addColumn = () =>{
+    setNumOfColumns((prevState)=>prevState+1)
+  }
+  
+  return <>
+    <div>{rows}</div>
+    <div>
+        <button onClick={addRow}>Add Row</button>
+        <button onClick={addColumn}>Add Column</button>
+        <button>Save Json</button>
+        <button>Upload Json</button>
+    </div>
+  </>;
 };
 
 export default Table;
