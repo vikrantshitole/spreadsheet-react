@@ -3,9 +3,6 @@ import './index.css';
 import React, { useState, useEffect, useRef } from 'react';
 
 const Cell = ({ x, y, value: initialValue, onChangedValue, executeFormula }) => {
-    console.log('====================================');
-    console.log(initialValue, x, y);
-    console.log('====================================');
   const [editing, setEditing] = useState(false);
   const [selected, setSelected] = useState(false);
   const [value, setValue] = useState(initialValue);
@@ -96,36 +93,6 @@ const Cell = ({ x, y, value: initialValue, onChangedValue, executeFormula }) => 
     setEditing(true);
   };
 
-  const calculateCss = () => {
-    const css = {
-      width: '80px',
-      padding: '4px',
-      margin: '0',
-      height: '25px',
-      boxSizing: 'border-box',
-      position: 'relative',
-      display: 'inline-block',
-      color: 'black',
-      border: '1px solid #cacaca',
-      textAlign: 'left',
-      verticalAlign: 'top',
-      fontSize: '14px',
-      lineHeight: '15px',
-      overflow: 'hidden',
-      fontFamily: "Calibri, 'Segoe UI', Thonburi, Arial, Verdana, sans-serif",
-    };
-    if (x === 0 || y === 0) {
-      css.textAlign = 'center';
-      css.backgroundColor = '#f0f0f0';
-      css.fontWeight = 'bold';
-    }
-    if (selected) {
-      css.outlineColor = 'lightblue';
-      css.outlineStyle = 'dotted';
-    }
-    return css;
-  };
-
   let css = 'cell';
   if (x === 0 || y === 0) {
     css += ' cell-default'  }
@@ -175,4 +142,4 @@ const Cell = ({ x, y, value: initialValue, onChangedValue, executeFormula }) => 
   );
 };
 
-export default Cell;
+export default React.memo(Cell);
