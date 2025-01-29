@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Row from '../Row/Row';
 import { Parser as FormulaParser } from 'hot-formula-parser';
 
@@ -7,6 +7,7 @@ const Table = (props) => {
   const parser = new FormulaParser();
     const [numOfRows, setNumOfRows] = useState(props.y)
     const [numOfColumns, setNumOfColumns] = useState(props.x)
+    const uploadRef = useRef(null)
   useEffect(() => {
     // Hook into the parser's callCellValue event
     parser.on('callCellValue', (cellCoord, done) => {
@@ -116,13 +117,48 @@ const Table = (props) => {
     setNumOfColumns((prevState)=>prevState+1)
   }
   
+  const saveToJson = () => {
+    const jsonData = JSON.stringify(data, null, 2);  // Convert to JSON string
+    const blob = new Blob([jsonData], { type: 'application/json' });  // Create a Blob
+
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);  // Create an object URL for the Blob
+    link.download = 'data.json';  // Specify filename for download
+    link.click();  // Trigger the download
+  
+  }
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+
+      // Define the callback function to run when the file is read
+      reader.onload = (e) => {
+        try {
+          const jsonData = JSON.parse(e.target.result);
+          setData(jsonData);  // Set the file content to state
+        } catch (error) {
+          alert("Invalid JSON file.");
+        }
+      };
+
+      reader.readAsText(file);  // Read the file as text
+    }
+  };
+
+  const uploadJson = () => {
+    uploadRef.current.click();  // Programmatically click the hidden file input
+  }
   return <>
     <div>{rows}</div>
     <div>
         <button onClick={addRow}>Add Row</button>
         <button onClick={addColumn}>Add Column</button>
-        <button>Save Json</button>
-        <button>Upload Json</button>
+        <button onClick={saveToJson}>Save Json</button>
+        <button onClick={uploadJson}>Upload Json</button>
+        <input className='none' ref={uploadRef} type="file" accept=".json" onChange={handleFileChange} />
+
     </div>
   </>;
 };

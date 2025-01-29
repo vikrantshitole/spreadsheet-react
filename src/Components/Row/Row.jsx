@@ -4,6 +4,9 @@ const Row = props => {
   const cells = []
   const y = props.y
   for (let x = 0; x < props.x; x += 1) {
+    console.log('====================================');
+    console.log(props.rowData[x]);
+    console.log('====================================');
     cells.push(
         <Cell
           key={`${x}-${y}`}

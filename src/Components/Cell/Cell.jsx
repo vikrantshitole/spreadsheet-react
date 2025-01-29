@@ -3,6 +3,9 @@ import './index.css';
 import React, { useState, useEffect, useRef } from 'react';
 
 const Cell = ({ x, y, value: initialValue, onChangedValue, executeFormula }) => {
+    console.log('====================================');
+    console.log(initialValue, x, y);
+    console.log('====================================');
   const [editing, setEditing] = useState(false);
   const [selected, setSelected] = useState(false);
   const [value, setValue] = useState(initialValue);
@@ -30,6 +33,10 @@ const Cell = ({ x, y, value: initialValue, onChangedValue, executeFormula }) => 
     setDisplay(determineDisplay({ x, y }, value));
   }, [value, x, y]);
 
+  useEffect(() => {
+    setValue(initialValue)
+  },[initialValue])
+  
   function determineDisplay({ x, y }, value) {
     if (value.slice(0, 1) === '=') {
       const res = executeFormula({ x, y }, value.slice(1));
